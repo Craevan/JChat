@@ -7,6 +7,32 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
+
+    private static final Map<String, Connection> CONNECTIONS_MAP = new ConcurrentHashMap<>();
+
+    public static void sendBroadcastMessage(Message message) {
+        for (Map.Entry<String, Connection> connectionEntry : CONNECTIONS_MAP.entrySet()) {
+            try {
+                connectionEntry.getValue().send(message);
+            } catch (IOException e) {
+                ConsoleHelper.writeMessage("Сообщение не было доставлено");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        ConsoleHelper.writeMessage("Введите номер порта:");
+        int portNumber = ConsoleHelper.readInt();
+        try (ServerSocket srvSocket = new ServerSocket(portNumber)) {
+            ConsoleHelper.writeMessage("Сервер запущен");
+            while (true) {
+                new Handler(srvSocket.accept()).start();
+            }
+        } catch (IOException ioe) {
+            ConsoleHelper.writeMessage(ioe.getMessage());
+        }
+    }
+
     private static class Handler extends Thread {
         private final Socket socket;
 
@@ -68,31 +94,6 @@ public class Server {
                 sendBroadcastMessage(new Message(MessageType.USER_REMOVED, userName));
             }
             ConsoleHelper.writeMessage("Connection with " + socket.getRemoteSocketAddress() + " closed");
-        }
-    }
-
-    private static final Map<String, Connection> CONNECTIONS_MAP = new ConcurrentHashMap<>();
-
-    public static void sendBroadcastMessage(Message message) {
-        for (Map.Entry<String, Connection> connectionEntry : CONNECTIONS_MAP.entrySet()) {
-            try {
-                connectionEntry.getValue().send(message);
-            } catch (IOException e) {
-                ConsoleHelper.writeMessage("Сообщение не было доставлено");
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        ConsoleHelper.writeMessage("Введите номер порта:");
-        int portNumber = ConsoleHelper.readInt();
-        try (ServerSocket srvSocket = new ServerSocket(portNumber)) {
-            ConsoleHelper.writeMessage("Сервер запущен");
-            while (true) {
-                new Handler(srvSocket.accept()).start();
-            }
-        } catch (IOException ioe) {
-            ConsoleHelper.writeMessage(ioe.getMessage());
         }
     }
 }

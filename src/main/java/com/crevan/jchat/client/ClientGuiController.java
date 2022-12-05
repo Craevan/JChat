@@ -1,13 +1,14 @@
 package com.crevan.jchat.client;
 
 public class ClientGuiController extends Client {
+
+    private final ClientGuiModel model = new ClientGuiModel();
+    private final ClientGuiView view = new ClientGuiView(this);
+
     public static void main(String[] args) {
         ClientGuiController clientGuiController = new ClientGuiController();
         clientGuiController.run();
     }
-
-    private final ClientGuiModel model = new ClientGuiModel();
-    private final ClientGuiView view = new ClientGuiView(this);
 
     public ClientGuiModel getModel() {
         return model;

@@ -10,7 +10,9 @@ import java.net.SocketAddress;
 public class Connection implements Closeable {
 
     private final Socket socket;
+
     private final ObjectOutputStream out;
+
     private final ObjectInputStream in;
 
     public Connection(Socket socket) throws IOException {
