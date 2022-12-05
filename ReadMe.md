@@ -1,0 +1,1 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4c05291b9ff74733a5fa2bc2c36d0b32)](https://www.codacy.com/gh/Craevan/JChat/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Craevan/JChat&amp;utm_campaign=Badge_Grade)
