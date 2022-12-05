@@ -11,8 +11,11 @@ public class ClientGuiView {
     private final ClientGuiController controller;
 
     private final JFrame frame = new JFrame("JChat");
+
     private final JTextField textField = new JTextField(50);
+
     private final JTextArea messages = new JTextArea(10, 50);
+
     private final JTextArea users = new JTextArea(10, 10);
 
     public ClientGuiView(ClientGuiController controller) {
