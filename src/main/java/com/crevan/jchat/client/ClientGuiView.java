@@ -1,7 +1,11 @@
 package com.crevan.jchat.client;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JOptionPane;
+import java.awt.BorderLayout;
 
 public class ClientGuiView {
     private final ClientGuiController controller;

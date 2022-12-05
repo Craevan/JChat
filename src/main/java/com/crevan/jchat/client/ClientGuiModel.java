@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class ClientGuiModel {
     private final Set<String> allUserNames = new HashSet<>();
+
     private String message;
 
     public Set<String> getAllUserNames() {
