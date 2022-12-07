@@ -1,9 +1,9 @@
-package com.crevan.jchat.client;
+package com.crevan.jchatclient;
 
-import com.crevan.jchat.Connection;
-import com.crevan.jchat.ConsoleHelper;
-import com.crevan.jchat.Message;
-import com.crevan.jchat.MessageType;
+import com.crevan.jchatserver.Connection;
+import com.crevan.jchatserver.ConsoleHelper;
+import com.crevan.jchatserver.Message;
+import com.crevan.jchatserver.MessageType;
 
 import java.io.IOException;
 import java.net.Socket;

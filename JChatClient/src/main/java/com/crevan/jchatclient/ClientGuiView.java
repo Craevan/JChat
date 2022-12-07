@@ -1,4 +1,4 @@
-package com.crevan.jchat.client;
+package com.crevan.jchatclient;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;

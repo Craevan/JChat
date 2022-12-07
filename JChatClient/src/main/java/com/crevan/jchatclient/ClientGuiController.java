@@ -1,4 +1,4 @@
-package com.crevan.jchat.client;
+package com.crevan.jchatclient;
 
 public class ClientGuiController extends Client {
 

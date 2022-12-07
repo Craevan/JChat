@@ -1,4 +1,4 @@
-package com.crevan.jchat;
+package com.crevan.jchatserver;
 
 import java.io.Closeable;
 import java.io.IOException;

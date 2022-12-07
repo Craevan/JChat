@@ -1,4 +1,4 @@
-package com.crevan.jchat.client;
+package com.crevan.jchatclient;
 
 import java.util.Collections;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package com.crevan.jchat;
+package com.crevan.jchatserver;
 
 public enum MessageType {
     NAME_REQUEST,

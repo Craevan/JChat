@@ -1,2 +1,5 @@
 /.idea
 /target
+/JChatClient/target/
+/JChatServer/target/
+/out/
