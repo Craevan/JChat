@@ -1,5 +1,7 @@
 package com.crevan.jchatserver;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,26 +12,28 @@ public class Server {
 
     private static final Map<String, Connection> CONNECTIONS_MAP = new ConcurrentHashMap<>();
 
+    private static final Logger log = Logger.getLogger(Server.class);
+
+    public static void main(String[] args) {
+        ConsoleHelper.writeMessage("Enter port number:");
+        int portNumber = ConsoleHelper.readInt();
+        try (ServerSocket srvSocket = new ServerSocket(portNumber)) {
+            log.info("Server started on port: " + portNumber);
+            while (true) {
+                new Handler(srvSocket.accept()).start();
+            }
+        } catch (IOException ioe) {
+            log.error("Error" + ioe.getMessage());
+        }
+    }
+
     public static void sendBroadcastMessage(Message message) {
         for (Map.Entry<String, Connection> connectionEntry : CONNECTIONS_MAP.entrySet()) {
             try {
                 connectionEntry.getValue().send(message);
             } catch (IOException e) {
-                ConsoleHelper.writeMessage("Сообщение не было доставлено");
+                log.error("Message was not delivered: " + e.getMessage());
             }
-        }
-    }
-
-    public static void main(String[] args) {
-        ConsoleHelper.writeMessage("Введите номер порта:");
-        int portNumber = ConsoleHelper.readInt();
-        try (ServerSocket srvSocket = new ServerSocket(portNumber)) {
-            ConsoleHelper.writeMessage("Сервер запущен");
-            while (true) {
-                new Handler(srvSocket.accept()).start();
-            }
-        } catch (IOException ioe) {
-            ConsoleHelper.writeMessage(ioe.getMessage());
         }
     }
 
@@ -49,6 +53,7 @@ public class Server {
                     || "".equals(receivedMessage.getData()) || CONNECTIONS_MAP.containsKey(receivedMessage.getData()));
             CONNECTIONS_MAP.put(receivedMessage.getData(), connection);
             connection.send(new Message(MessageType.NAME_ACCEPTED));
+            log.info("User: " + receivedMessage.getData() + " connected.");
             return receivedMessage.getData();
         }
 
@@ -57,8 +62,6 @@ public class Server {
                 String clientName = entry.getKey();
                 if (!clientName.equals(userName)) {
                     connection.send(new Message(MessageType.USER_ADDED, clientName));
-                } else {
-                    ConsoleHelper.writeMessage("Ошибка");
                 }
             }
         }
@@ -67,15 +70,16 @@ public class Server {
             while (true) {
                 Message message = connection.receive();
                 if (message.getMessageType() == MessageType.TEXT) {
-                    String authorText = userName + ": " + message.getData();
-                    sendBroadcastMessage(new Message(MessageType.TEXT, authorText));
+                    log.info(userName + " sent a message");
+                    String textWithAuthor = userName + ": " + message.getData();
+                    sendBroadcastMessage(new Message(MessageType.TEXT, textWithAuthor));
                 }
             }
         }
 
         @Override
         public void run() {
-            ConsoleHelper.writeMessage("Установлено соединение с: " + socket.getRemoteSocketAddress());
+            log.info("Connected to: " + socket.getRemoteSocketAddress());
             String userName = null;
             try (Connection connection = new Connection(socket)) {
                 userName = serverHandshake(connection);
@@ -83,17 +87,17 @@ public class Server {
                 notifyUsers(connection, userName);
                 serverMainLoop(connection, userName);
             } catch (IOException | ClassNotFoundException e) {
-                ConsoleHelper.writeMessage("Error: " + e.getMessage());
+                log.error("Error: " + e.getMessage());
             }
             if (userName != null) {
                 try {
                     CONNECTIONS_MAP.remove(userName).close();
                 } catch (IOException e) {
-                    ConsoleHelper.writeMessage("Error: " + e.getMessage());
+                    log.error("Error: " + e.getMessage());
                 }
                 sendBroadcastMessage(new Message(MessageType.USER_REMOVED, userName));
             }
-            ConsoleHelper.writeMessage("Connection with " + socket.getRemoteSocketAddress() + " closed");
+            log.info("Connection with " + socket.getRemoteSocketAddress() + " closed");
         }
     }
 }
