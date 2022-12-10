@@ -44,8 +44,8 @@ public class ClientGuiView {
     public String getServerAddress() {
         return JOptionPane.showInputDialog(
                 frame,
-                "Введите адрес сервера:",
-                "Конфигурация клиента",
+                "Enter server address:",
+                "Client Configuration",
                 JOptionPane.QUESTION_MESSAGE);
     }
 
@@ -53,16 +53,16 @@ public class ClientGuiView {
         while (true) {
             String port = JOptionPane.showInputDialog(
                     frame,
-                    "Введите порт сервера:",
-                    "Конфигурация клиента",
+                    "Enter server port:",
+                    "Client Configuration",
                     JOptionPane.QUESTION_MESSAGE);
             try {
                 return Integer.parseInt(port.trim());
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(
                         frame,
-                        "Был введен некорректный порт сервера. Попробуйте еще раз.",
-                        "Конфигурация клиента",
+                        "An invalid server port. Try again.",
+                        "Client Configuration",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -71,8 +71,8 @@ public class ClientGuiView {
     public String getUserName() {
         return JOptionPane.showInputDialog(
                 frame,
-                "Введите ваше имя:",
-                "Конфигурация клиента",
+                "Enter your name:",
+                "Client Configuration",
                 JOptionPane.QUESTION_MESSAGE);
     }
 
@@ -81,14 +81,14 @@ public class ClientGuiView {
         if (clientConnected) {
             JOptionPane.showMessageDialog(
                     frame,
-                    "Соединение с сервером установлено",
-                    "Чат",
+                    "Server connection success",
+                    "JChat",
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(
                     frame,
-                    "Клиент не подключен к серверу",
-                    "Чат",
+                    "The client is not connected to the server",
+                    "JChat",
                     JOptionPane.ERROR_MESSAGE);
         }
     }

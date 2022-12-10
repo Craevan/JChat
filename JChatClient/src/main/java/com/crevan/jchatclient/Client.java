@@ -4,11 +4,20 @@ import com.crevan.jchatserver.Connection;
 import com.crevan.jchatserver.ConsoleHelper;
 import com.crevan.jchatserver.Message;
 import com.crevan.jchatserver.MessageType;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * The client must request for a server address and port each time client is launched.<br>
+ * Client receives a username request from the server right after connection was approved.<br>
+ * Client responds with a username and stands by until the response is accepted by the server.<br>
+ */
+
 public class Client {
+
+    private static final Logger log = Logger.getLogger(Client.class);
     protected Connection connection;
 
     private volatile boolean clientConnected = false;
@@ -22,13 +31,13 @@ public class Client {
                 wait();
             }
         } catch (InterruptedException e) {
-            ConsoleHelper.writeMessage("Ошибка ожидания потока");
+            log.error("Thread waiting error. " + e.getMessage());
             return;
         }
         if (clientConnected) {
-            ConsoleHelper.writeMessage("Соединение установлено. Для выхода наберите команду 'exit'.");
+            log.info("Connection success. Type 'exit' to exit.");
         } else {
-            ConsoleHelper.writeMessage("Произошла ошибка во время работы клиента.");
+            log.error("An error occurred.");
         }
         while (clientConnected) {
             String message = ConsoleHelper.readString();
@@ -47,17 +56,17 @@ public class Client {
     }
 
     protected String getServerAddress() {
-        ConsoleHelper.writeMessage("Введите адрес сервера: ");
+        ConsoleHelper.writeMessage("Enter server address:");
         return ConsoleHelper.readString();
     }
 
     protected int getServerPort() {
-        ConsoleHelper.writeMessage("Введите порт сервера: ");
+        ConsoleHelper.writeMessage("Enter server port:");
         return ConsoleHelper.readInt();
     }
 
     protected String getUserName() {
-        ConsoleHelper.writeMessage("Введите имя пользователя: ");
+        ConsoleHelper.writeMessage("Enter username:");
         return ConsoleHelper.readString();
     }
 
@@ -73,7 +82,7 @@ public class Client {
         try {
             connection.send(new Message(MessageType.TEXT, text));
         } catch (IOException e) {
-            ConsoleHelper.writeMessage("Error: " + e.getMessage());
+            log.error("Error: " + e.getMessage());
             clientConnected = false;
         }
     }
@@ -84,10 +93,12 @@ public class Client {
         }
 
         protected void informAboutAddingNewUser(String userName) {
+            log.info(userName + " Connected to chat");
             ConsoleHelper.writeMessage(userName + " Connected to chat");
         }
 
         protected void informAboutDeletingNewUser(String userName) {
+            log.info(userName + " Disconnected from chat");
             ConsoleHelper.writeMessage(userName + " Disconnected from chat");
         }
 
@@ -108,6 +119,7 @@ public class Client {
                     notifyConnectionStatusChanged(true);
                     return;
                 } else {
+                    log.debug("Unexpected MessageType");
                     throw new IOException("Unexpected MessageType");
                 }
             }
@@ -123,6 +135,7 @@ public class Client {
                 } else if (message.getMessageType() == MessageType.USER_REMOVED) {
                     informAboutDeletingNewUser(message.getData());
                 } else {
+                    log.debug("Unexpected MessageType");
                     throw new IOException("Unexpected MessageType");
                 }
             }
@@ -139,7 +152,7 @@ public class Client {
                 clientMainLoop();
             } catch (IOException | ClassNotFoundException e) {
                 notifyConnectionStatusChanged(false);
-                ConsoleHelper.writeMessage("Error: " + e.getMessage());
+                log.error("Error: " + e.getMessage());
             }
         }
     }

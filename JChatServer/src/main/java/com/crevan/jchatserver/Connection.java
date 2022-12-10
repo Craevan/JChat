@@ -6,6 +6,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * The Connection class acts as a wrapper over the java.net.Socket class,
+ * which has to be able to serialize and deserialize objects of type Message into a socket.
+ */
+
 public class Connection implements Closeable {
 
     private final Socket socket;

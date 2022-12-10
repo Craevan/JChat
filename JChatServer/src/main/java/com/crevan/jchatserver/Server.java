@@ -8,6 +8,13 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * One creates a server socket connection.<br>
+ * Looped, waiting for a client to connect the socket.<br>
+ * Creates a new handler thread to exchange messages with the client.<br>
+ * Waiting for the next client to connect.
+ */
+
 public class Server {
 
     private static final Map<String, Connection> CONNECTIONS_MAP = new ConcurrentHashMap<>();
